@@ -302,6 +302,7 @@ Spectral Ops
 
 Other Operations
 ~~~~~~~~~~~~~~~~~~~~~~
+.. autofunction:: cummax
 .. autofunction:: bincount
 .. autofunction:: broadcast_tensors
 .. autofunction:: cartesian_prod
