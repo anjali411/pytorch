@@ -259,8 +259,8 @@ struct alignas(2*sizeof(float)) complex<float>: public complex_common<float> {
   using complex_common<float>::complex_common;
   constexpr complex(): complex_common() {}; // needed by CUDA 9.x
   explicit constexpr complex(const complex<double> &other);
-#endif
   using complex_common<float>::operator=;
+#endif
 };
 
 template<>
