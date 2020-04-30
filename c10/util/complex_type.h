@@ -125,6 +125,7 @@ template<typename T>
 struct alignas(sizeof(T) * 2) complex_common {
   T storage[2];
 
+#ifdef __cplusplus
   constexpr complex_common(): storage{T(), T()} {}
   constexpr complex_common(const T& re, const T& im = T()): storage{re, im} {}
   template<typename U>
@@ -132,6 +133,7 @@ struct alignas(sizeof(T) * 2) complex_common {
 #if defined(__CUDACC__) || defined(__HIPCC__)
   template<typename U>
   explicit C10_HOST_DEVICE complex_common(const thrust::complex<U> &other): complex_common(other.real(), other.imag()) {}
+#endif
 #endif
 
   constexpr complex<T> &operator =(T re) {
@@ -253,22 +255,28 @@ struct alignas(sizeof(T) * 2) complex_common {
 
 template<>
 struct alignas(2*sizeof(float)) complex<float>: public complex_common<float> {
+#ifdef __cplusplus
   using complex_common<float>::complex_common;
   constexpr complex(): complex_common() {}; // needed by CUDA 9.x
   explicit constexpr complex(const complex<double> &other);
+#endif
   using complex_common<float>::operator=;
 };
 
 template<>
 struct alignas(2*sizeof(double)) complex<double>: public complex_common<double> {
+#ifdef __cplusplus
   using complex_common<double>::complex_common;
   constexpr complex(): complex_common() {}; // needed by CUDA 9.x
   constexpr complex(const complex<float> &other);
   using complex_common<double>::operator=;
+#endif
 };
 
+#ifdef __cplusplus
 constexpr complex<float>::complex(const complex<double> &other): complex_common(other.real(), other.imag()) {}
 constexpr complex<double>::complex(const complex<float> &other): complex_common(other.real(), other.imag()) {}
+#endif
 
 namespace complex_literals {
 
